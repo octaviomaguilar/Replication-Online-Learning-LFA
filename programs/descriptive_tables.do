@@ -57,7 +57,7 @@ use "$cps/cps_occupation_educ.dta", clear
 format %9.3f online_educ2019 online_educ2021 delta_educ
 list, noobs abbreviate(12) sepby(occ2)
 
-/* figure of table 1: */ 
+/* figure of table 2: */ 
 *bar graph of change in online training pre pandemic. 
 graph hbar (mean) online_educ2019, over(title,sort(online_educ2019) descending) bar(1, color(blue)) ///
 yline(0.2729252, lcolor(red)) ///
