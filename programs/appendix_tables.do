@@ -33,7 +33,6 @@ restore
 /* Employment flows: 2021*/
 preserve
 	keep if year == 2021 
-	/* 1.) Job Retainment: employed to employed */
 	reg emp_to_emp treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2021 [aw=weight]
 	estimates store c
 restore
@@ -41,7 +40,6 @@ restore
 /* Employment flows: 2022*/
 preserve
 	keep if year == 2022
-	/* 1.) Job Retainment: employed to employed */
 	reg emp_to_emp treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2021 [aw=weight]
 	estimates store d	
 restore
@@ -49,7 +47,6 @@ restore
 /* LF flows: 2019*/
 preserve
 	keep if year == 2019 
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2019 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2019[aw=weight]
 	estimates store e
 restore
@@ -57,7 +54,6 @@ restore
 /* LF flows: 2020*/
 preserve
 	keep if year == 2020
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2019 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2019[aw=weight]
 	estimates store f
 restore
@@ -65,7 +61,6 @@ restore
 /* LF flows: 2021*/
 preserve
 	keep if year == 2021 
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2021 [aw=weight]
 	estimates store g
 restore
@@ -73,7 +68,6 @@ restore
 /* LF flows: 2022*/
 preserve
 	keep if year == 2022
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2021 [aw=weight]
 	estimates store h
 restore
@@ -107,7 +101,6 @@ note("All columns include a set of controls as described in section 3.6.")
 /* Employment flows: 2019*/
 preserve
 	keep if year == 2019
-	/* 1.) Job Retainment: employed to employed */
 	reg emp_to_emp treat_2019 female
 	estimates store a 
 	reg emp_to_emp treat_2019 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2019 [aw=weight]
@@ -119,7 +112,6 @@ restore
 /* Employment flows: 2020*/
 preserve
 	keep if year == 2020
-	/* 1.) Job Retainment: employed to employed */
 	reg emp_to_emp treat_2019 female
 	estimates store d
 	reg emp_to_emp treat_2019 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2019 [aw=weight]
@@ -131,7 +123,6 @@ restore
 /* Employment flows: 2021*/
 preserve
 	keep if year == 2021 
-	/* 1.) Job Retainment: employed to employed */
 	reg emp_to_emp treat_2021 female
 	estimates store g
 	reg emp_to_emp treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2021 [aw=weight]
@@ -143,7 +134,6 @@ restore
 /* Employment flows: 2022*/
 preserve
 	keep if year == 2022
-	/* 1.) Job Retainment: employed to employed */
 	reg emp_to_emp treat_2021 female
 	estimates store j
 	reg emp_to_emp treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2021 [aw=weight]
@@ -184,7 +174,6 @@ note("All columns include a set of controls as described in section 3.6.")
 /* LF flows: 2019*/
 preserve
 	keep if year == 2019 
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2019 female
 	estimates store a
 	reg lf_to_nlf treat_2019 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2019[aw=weight]
@@ -196,7 +185,6 @@ restore
 /* LF flows: 2020*/
 preserve
 	keep if year == 2020
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2019 female
 	estimates store d
 	reg lf_to_nlf treat_2019 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2019[aw=weight]
@@ -208,7 +196,6 @@ restore
 /* LF flows: 2021*/
 preserve
 	keep if year == 2021 
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2021 female
 	estimates store g
 	reg lf_to_nlf treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size wfh2021 [aw=weight]
@@ -220,7 +207,6 @@ restore
 /* LF flows: 2022*/
 preserve
 	keep if year == 2022
-	/* 1.) Job Retainment: employed to employed */
 	reg lf_to_nlf treat_2021 female
 	estimates store j
 	reg lf_to_nlf treat_2021 female age married i.race c.kids ib5.inc_q i.education onet_wfh fam_size [aw=weight]
