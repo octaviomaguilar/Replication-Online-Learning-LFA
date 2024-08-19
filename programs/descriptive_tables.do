@@ -101,7 +101,7 @@ foreach x in age fam_size kids eldest_child education wage female married      {
 }
 tab race if emp_to_emp == 1 
 
-*columns 2 table 3:
+*column 2 table 3:
 sum lf_to_nlf
 
 foreach x in age fam_size kids eldest_child education wage female married      {
