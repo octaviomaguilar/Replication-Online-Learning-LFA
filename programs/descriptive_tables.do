@@ -7,6 +7,7 @@ global data "$home/data"
 global cps "$data/cps"
 global bls "$data/bls"
 global crosswalk "$data/crosswalks"
+global ipums "$data/ipums_cps"
 
 *******
 **(1)**
@@ -26,26 +27,31 @@ replace lf = 3 if inlist(lf,5,6,7)
 *share of online education:
 tab educ_content if year == 2019
 tab educ_content if year == 2021
+tab educ_content if year == 2023
 tab educ_content
 
 *shares for all labor force statuses:
 tab lf if educ_content == 1 & year == 2019
 tab lf if educ_content == 1 & year == 2021
+tab lf if educ_content == 1 & year == 2023
 tab lf if educ_content == 1
 
 *shares by age quintile
 tab age_quintile if educ_content == 1 & year == 2019
 tab age_quintile if educ_content == 1 & year == 2021
+tab age_quintile if educ_content == 1 & year == 2023
 tab age_quintile if educ_content == 1
 
 *shares by race
 tab race if educ_content == 1 & year == 2019
 tab race if educ_content == 1 & year == 2021
+tab race if educ_content == 1 & year == 2023
 tab race if educ_content == 1
 
 *shares by gender: in the paper it is reported as (1-male).
 tab male if educ_content == 1 & year == 2019
 tab male if educ_content == 1 & year == 2021
+tab male if educ_content == 1 & year == 2023
 tab male if educ_content == 1 
 
 *******
@@ -54,10 +60,10 @@ tab male if educ_content == 1
 /* table 2: */ 
 use "$cps/cps_occupation_educ.dta", clear
 
-format %9.3f online_educ2019 online_educ2021 delta_educ
+format %9.3f online_educ2019 online_educ2021 online_educ2023 delta_educ 
 list, noobs abbreviate(12) sepby(occ2)
 
-/* figure of table 2: */ 
+/* figure of table 1: */ 
 *bar graph of change in online training pre pandemic. 
 graph hbar (mean) online_educ2019, over(title,sort(online_educ2019) descending) bar(1, color(blue)) ///
 yline(0.2729252, lcolor(red)) ///
@@ -66,6 +72,12 @@ blabel(bar, format(%3.2f))
 
 *bar graph of change in online training post pandemic. 
 graph hbar (mean) online_educ2021, over(title,sort(online_educ2021) descending) bar(1, color(blue)) ///
+yline(0.3309605 , lcolor(red)) ///
+ytitle("Weighted Proportion, %") ///
+blabel(bar, format(%3.2f)) 
+
+*bar graph of change in online training post pandemic. 
+graph hbar (mean) online_educ2023, over(title,sort(online_educ2023) descending) bar(1, color(blue)) ///
 yline(0.3309605 , lcolor(red)) ///
 ytitle("Weighted Proportion, %") ///
 blabel(bar, format(%3.2f)) 
@@ -101,10 +113,21 @@ foreach x in age fam_size kids eldest_child education wage female married      {
 }
 tab race if emp_to_emp == 1 
 
-*column 2 table 3:
+*columns 2 table 3:
 sum lf_to_nlf
 
 foreach x in age fam_size kids eldest_child education wage female married      {
 	sum `x' if lf_to_nlf == 1
 }
 tab race if lf_to_nlf == 1 
+
+
+*column 3 table 3:
+use "$ipums/ipums_cps_clean_job_switch.dta", clear
+sum job_switcher
+
+foreach x in age fam_size kids eldest_child education wage female married      {
+	sum `x' if job_switcher == 1
+}
+tab race if job_switcher == 1 
+

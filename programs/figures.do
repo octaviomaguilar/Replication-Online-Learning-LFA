@@ -26,6 +26,12 @@ yline(0.2964892, lcolor(red)) ///
 ytitle("Weighted Proportion, %") ///
 blabel(bar, format(%3.2f)) 
 
+*bar graph of change in online training post pandemic. 
+graph hbar (mean) naics2_online_educ2023, over(title,sort(naics2_online_educ2023) descending) bar(1, color(blue)) ///
+yline(0.2964892, lcolor(red)) ///
+ytitle("Weighted Proportion, %") ///
+blabel(bar, format(%3.2f)) 
+
 *bar graph of change in online training pre-post pandemic. 
 graph hbar (mean) delta_educ_naics, over(title,sort(delta_educ_naics) descending) bar(1, color(blue)) ///
 yline(0.0, lcolor(red)) ///
