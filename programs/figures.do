@@ -134,7 +134,7 @@ preserve
 	twoway scatter online_educ2021 wfh2021 , mlabel(occ2) || lfit online_educ2021 wfh2021 , legend(off) subtitle("r `corr'", size(small)) ytitle("Online Education") xtitle("Work-From-Home")
 restore
 
-*Panel C
+*Panel A (appendix)
 preserve
 	*merge in lightcast
 	merge m:1 occ2 using "$data/wfh/lightcast_telework.dta", keep(3) nogen
@@ -148,7 +148,7 @@ preserve
 	twoway scatter  remote2021 online_educ2021 , mlabel(occ2) || lfit  remote2021 online_educ2021 , legend(off) subtitle("r `corr'", size(small)) ytitle("Remote Job Posting") xtitle("Online Education")
 restore
 
-*Panel D & E:
+*Panel B & C (appendix):
 import excel "/mq/scratch/m1oma00/oma_projects/replication_educ_lfp_oma/data/bls/naics2_telework.xlsx", sheet("Sheet1") firstrow clear
 drop if percent_some == .
 merge 1:1 naics2 using "$cps/cps_naics2_educ.dta", keep(3)
@@ -163,7 +163,7 @@ restore
 
 rename naics2_online_educ2021 online_educ2021_naics2
 
-*Panel D
+*Panel B
 preserve
 	keep title naics2 percent_some online_educ2021_naics2 
 	replace naics2 = title if inlist(naics2,"61","55","62","52","72","51","48-49","23","54")
@@ -174,7 +174,7 @@ preserve
 	twoway scatter percent_some online_educ2021_naics2  , mlabel(naics2) || lfit percent_some online_educ2021_naics2 , legend(off) subtitle("r `corr'", size(small)) ytitle("Some Employees Work From Home") xtitle("Online Education")
 restore
 
-*Panel E
+*Panel C
 preserve
 	keep title naics2 percent_all online_educ2021_naics2 
 	replace naics2 = title if inlist(naics2,"55","54","51","56","72","62","11","52")
@@ -184,6 +184,241 @@ preserve
 	local corr : di %5.3g r(rho) 
 	twoway scatter percent_all online_educ2021_naics2  , mlabel(naics2) || lfit percent_all online_educ2021_naics2 , legend(off) subtitle("r `corr'", size(small)) ytitle("All Employees Work From Home") xtitle("Online Education")
 restore
+
+*******
+**(5)**
+*******
+/* figure 6 */
+*Run blocks 5.1-5.4
+*Blocks 5.1-5.3 create the data needed for plotting, and block 5.4 creates the figure. 
+*******
+**(5.1)**
+*******
+/* create ATUS dataset for menwho online learn */
+use "$atus/atus_00011.dta", clear
+
+*drop bad data quality
+keep if dataqual == 200
+
+*Restrict to employees aged 20-64
+keep if age >= 18 & age <= 54
+keep if empstat == 1 
+
+keep if inlist(activity,060101, 060102)
+
+*create a year month variable
+gen ym = ym(year,month)
+format ym %tm
+
+*create quarterly variable: 
+* Calculate the quarter based on month
+gen quarter = ceil(month / 3)
+
+* Create the quarterly date variable
+gen qtr = yq(year, quarter)
+format qtr %tq
+
+keep if sex == 1
+preserve
+	* sum the duration of online learning across all respondents. 
+	collapse (sum) duration, by(cpsidp year sex)
+
+	keep cpsidp year sex
+	gen education = 1
+	
+	tempfile education
+	save "`education'"
+restore 
+
+merge m:1 cpsidp year sex using `education'
+drop _merge 
+
+*take the sum of time spent working for each individual
+collapse (sum) duration (first) education wt06 wt20, by(cpsidp sex year where)
+
+gen online_educ_atus = 0 
+replace online_educ_atus = 1 if inlist(where, 101, 103, 109)
+
+replace wt06 = round(wt06)
+replace wt20 = round(wt20)
+
+preserve 
+	keep if year == 2020 
+	collapse (sum) education online_educ_atus [fw=wt20], by(year sex)
+	tempfile 2020
+	save `2020', replace
+restore
+	
+collapse (sum) education online_educ_atus [fw=wt06], by(year sex)
+append using `2020'
+
+gen online_educ_rate = online_educ_atus/ education
+
+sort year sex
+
+keep year sex online_educ_rate
+rename online_educ_rate online_male
+
+save "$atus/atus_male_educ_year.dta", replace
+
+*******
+**(5.2)**
+*******
+/* create ATUS dataset for women who online learn */
+use "$atus/atus_00011.dta", clear
+
+*drop bad data quality
+keep if dataqual == 200
+
+*Restrict to employees aged 20-64
+keep if age >= 18 & age <= 54
+keep if empstat == 1 
+
+keep if inlist(activity,060101, 060102)
+
+*create a year month variable
+gen ym = ym(year,month)
+format ym %tm
+
+*create quarterly variable: 
+* Calculate the quarter based on month
+gen quarter = ceil(month / 3)
+
+* Create the quarterly date variable
+gen qtr = yq(year, quarter)
+format qtr %tq
+
+keep if sex == 2
+preserve
+	* sum the duration of online learning across all respondents. 
+	collapse (sum) duration, by(cpsidp year sex)
+
+	keep cpsidp year sex
+	gen education = 1
+	
+	tempfile education
+	save "`education'"
+restore 
+
+merge m:1 cpsidp year sex using `education'
+drop _merge 
+
+*take the sum of time spent working for each individual
+collapse (sum) duration (first) education wt06 wt20, by(cpsidp sex year where)
+
+gen online_educ_atus = 0 
+replace online_educ_atus = 1 if inlist(where, 101, 103, 109)
+
+replace wt06 = round(wt06)
+replace wt20 = round(wt20)
+
+preserve 
+	keep if year == 2020 
+	collapse (sum) education online_educ_atus [fw=wt20], by(year sex)
+	tempfile 2020
+	save `2020', replace
+restore
+	
+collapse (sum) education online_educ_atus [fw=wt06], by(year sex)
+append using `2020'
+
+gen online_educ_rate = online_educ_atus/ education
+
+sort year sex
+
+keep year sex online_educ_rate
+rename online_educ_rate online_female
+
+save "$atus/atus_female_educ_year.dta", replace
+
+*******
+**(5.3)**
+*******
+/* create ATUS dataset for the total who online learn */
+use "$atus/atus_00011.dta", clear
+
+*drop bad data quality
+keep if dataqual == 200
+
+*Restrict to employees aged 20-64
+keep if age >= 18 & age <= 54
+keep if empstat == 1 
+
+keep if inlist(activity,060101, 060102)
+
+*create a year month variable
+gen ym = ym(year,month)
+format ym %tm
+
+*create quarterly variable: 
+* Calculate the quarter based on month
+gen quarter = ceil(month / 3)
+
+* Create the quarterly date variable
+gen qtr = yq(year, quarter)
+format qtr %tq
+
+preserve
+	* sum the duration of online learning across all respondents. 
+	collapse (sum) duration, by(cpsidp year)
+
+	keep cpsidp year 
+	gen education = 1
+	
+	tempfile education
+	save "`education'"
+restore 
+
+merge m:1 cpsidp year  using `education'
+drop _merge 
+
+*take the sum of time spent working for each individual
+collapse (sum) duration (first) education wt06 wt20, by(cpsidp  year where)
+
+gen online_educ_atus = 0 
+replace online_educ_atus = 1 if inlist(where, 101, 103, 109)
+
+replace wt06 = round(wt06)
+replace wt20 = round(wt20)
+
+preserve 
+	keep if year == 2020 
+	collapse (sum) education online_educ_atus [fw=wt20], by(year )
+	tempfile 2020
+	save `2020', replace
+restore
+	
+collapse (sum) education online_educ_atus [fw=wt06], by(year )
+append using `2020'
+
+gen online_educ_rate = online_educ_atus/ education
+
+sort year 
+
+keep year  online_educ_rate
+rename online_educ_rate online_total
+
+save "$atus/atus_educ_total_year.dta", replace
+
+*******
+**(5.4)**
+*******
+*plot across gender and for the overall sample:
+use "$atus/atus_female_educ_year.dta", clear
+merge 1:1 year using "$atus/atus_male_educ_year.dta", keep(3) nogen
+merge 1:1 year using "$atus/atus_educ_total_year.dta", keep(3) nogen
+drop sex
+
+*only plot 2003-2021:
+drop if year == 2022
+foreach x in online_total online_male online_female {
+	replace `x' = `x'*100
+}
+twoway line online_total year, xtitle("Year") ytitle("Online Learning Rate (%)") xlabel(2003(5)2023)
+twoway line online_male online_female year, xtitle("Year") ytitle("Online Learning Rate (%)") legend(label(1 "Male") label(2 "Female")) xlabel(2003(5)2023)
+twoway line online_male online_female online_total year, xtitle("Year") ytitle("Online Learning Rate (%)") legend(label(1 "Male") label(2 "Female") label(3 "Total")) xlabel(2003(5)2023)
+
+
 
 *********
 **(A.1)**
