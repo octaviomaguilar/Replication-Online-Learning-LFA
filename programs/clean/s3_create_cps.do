@@ -24,7 +24,17 @@ import delimited "$cps/nov21pub.csv", clear
 rename gestfips gcfip
 keep hrhhid hryear4 hrmonth gereg gtmetsta prtage pemaritl pesex peeduca ptdtrace ptdtrace prcitshp prcitshp puretot pemlr pudis pehrusl1 pehrusl1 pehrusl2 pehrftpt pehrrsn2 prcivlf hetvbox pevideo peedtrai hepscon2 hepscon1 henotv1 pruntype prdtocc1 prdtocc2 prdtind1 peio1icd pwsswgt prempnot hefaminc gcfip pxedtrai hrintsta prpertyp prfamrel prfamtyp hrhtype
 append using "$cps/cps_2019.dta"
+tempfile f 
+save `f', replace 
 
+/*
+/* import 2023 cps data */
+import delimited "$cps/nov23pub.csv", clear
+
+rename gestfips gcfip
+keep hrhhid hryear4 hrmonth gereg gtmetsta prtage pemaritl pesex peeduca ptdtrace ptdtrace prcitshp prcitshp puretot pemlr pudis pehrusl1 pehrusl1 pehrusl2 pehrftpt pehrrsn2 prcivlf hetvbox pevideo peedtrai hepscon2 hepscon1 pruntype prdtocc1 prdtocc2 prdtind1 peio1icd pwsswgt prempnot hefaminc gcfip pxedtrai hrintsta prpertyp prfamrel prfamtyp hrhtype
+append using `f'
+*/
 *******
 **(1)**
 *******
@@ -85,40 +95,9 @@ replace employed = 0 if employed == .
 gen unemployed = 1 if pemlr==3 | pemlr==4
 replace unemployed = 0 if unemployed == .
 
-/* Control */ 
-generate control = employed
-
-/* Treatment 1: Involuntary workforce exit */ 
-generate treatment1 = 0 
-replace treatment1 = 1 if pruntype == 1 | pruntype == 2 
-tab treatment1 
-
-/*Treatment 2: Voluntary workforce exit */ 
-generate treatment2 = 0 
-replace treatment2= 1 if pruntype == 3 | pruntype ==4 
-tab treatment2 
-
-/*Treatment 3: Entrant */
-generate treatment3 = 0 
-replace treatment3= 1 if pruntype == 5 | pruntype == 6
-tab treatment3 
-
-*Note pxedtrai is only available starting in 2021. 
 /*Subscription to educational content*/ 
 generate educ_content = 0 
 replace educ_content = 1 if peedtrai == 1 
-*| pxedtrai == 1 
-
-*checking control and treatment groups: 
-foreach x in control unemployed treatment1 treatment2 treatment3 educ_content  {
-	tab `x'
-}
-
-foreach x in control unemployed treatment1 treatment2 treatment3 educ_content { 
-	tab `x' year
-}
-
-*UER: 3.3% pre-covid and 3.8% post covid.
 
 *******
 **(2)**
@@ -159,15 +138,8 @@ replace y2021 = 1 if year == 2021
 	
 	generate black = 0 
 	replace black = 1 if race ==2 
-
-//Type of workers: 
-gen blue_collar = 1 if inlist(prdtocc1,13,14,15,18,19,20,21,22)
-replace blue_collar = 0 if blue_collar == .
-
-gen white_collar = 1 if inlist(prdtocc1,1,2,3,4,5,6,7,8,9,10,11,12,16,17)
-replace white_collar = 0 if white_collar == . 
-		
-*HDFE group variables
+	
+*group variables
 tostring prdtind1, replace
 gen naics2 = substr(prdtind1,1,2)
 
@@ -201,7 +173,6 @@ drop if lf_status==5 | lf_status==6 | lf_status==7
 
 *keeping only variables of interest. 
 keep hrhhid interview_month year employed unemployed control treatment1 treatment2 treatment3 educ_content y2021 region married male educ race white black naics2 iregion inaics2 ieducation irace iincome occ2 prdtocc1 pwsswgt state state_str istate white_collar blue_collar hh_inc age lf_status
-
 
 *check for missing values
 mdesc
