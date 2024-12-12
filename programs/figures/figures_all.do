@@ -176,10 +176,10 @@ use "$cps/cps_descriptives.dta", clear
 keep if age >16 & age < 55
 
 graph bar (mean) educ_content [aw=pwsswgt] if year == 2019, over(age) bar(1, color(blue)) ytitle(`"Weighted Average, %"') ylabel(, format(%9.2f)) 
-*graph export "$figures/appendix_1a.eps", replace
+*graph export "$figures/appendix_figure_A1_a.eps", replace
 
 graph bar (mean) educ_content [aw=pwsswgt] if year == 2021, over(age) bar(1, color(blue)) ytitle(`"Weighted Average, %"') ylabel(, format(%9.2f)) 
-*graph export "$figures/appendix_1b.eps", replace
+*graph export "$figures/appendix_figure_A1_b.eps", replace
 
 *********
 **(A.2)**
