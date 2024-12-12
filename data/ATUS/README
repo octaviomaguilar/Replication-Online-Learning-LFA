@@ -1,1 +1,2 @@
-
+This folder contains all the American Time Use Survey (ATUS) data. I do not include the raw ATUS data file due to its large size. Instead, I include the clean data.
+If you wish to pull the raw data please visit the IPUMS-ATUS website (https://www.atusdata.org/atus/) and extract the necessary variables. 
