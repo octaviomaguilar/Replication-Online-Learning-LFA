@@ -1,0 +1,2 @@
+This folder contains all the IPUMS-CPS ASEC data. I do not include the raw IPUMS data file due to its large size. Instead, I include a cleaned version.
+If you wish to pull the raw data please visit the IPUMS-CPS ASEC website (https://cps.ipums.org/cps/) and extract the necessary variables. 
