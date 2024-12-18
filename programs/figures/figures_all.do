@@ -28,7 +28,7 @@ graph export "$figures/figure1.eps", replace
 /* figure 2 */ 
 use "$cps/cps_naics2_educ.dta", clear
 
-*bar graph of change in online training pre pandemic. 
+*bar graph of change in online learning pre pandemic. 
 graph hbar (mean) naics2_online_educ2019, over(title,sort(naics2_online_educ2019) descending) bar(1, color(blue)) ///
 yline(0.247913, lcolor(red)) ///
 ytitle("Weighted Proportion, %") ///
