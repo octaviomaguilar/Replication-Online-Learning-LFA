@@ -240,8 +240,7 @@ preserve
 	corr online_educ2021_naics2 percent_all
 	local corr : di %5.3g r(rho) 
 	twoway scatter percent_all online_educ2021_naics2  , mlabel(naics2) || lfit percent_all online_educ2021_naics2 , legend(off) subtitle("r `corr'", size(small)) ytitle("All Employees Work From Home") xtitle("Online Learning") xlabel(, format(%9.2f))  ylabel(, format(%9.2f)) 
-	*graph export "$figures/appendix_figure_A2_b.eps", replace
-
+	*graph export "$figures/appendix_figure_A2_c.eps", replace
 restore
 
 
