@@ -66,14 +66,12 @@ preserve
 	local corr : di %5.3g r(rho) 
 	twoway scatter online_educ2021 any_term_occ2 , mlabel(occ2) || lfit online_educ2021 any_term_occ2 , legend(off) subtitle("r `corr'", size(small)) ytitle("Online Learning") xtitle("On-the-Job Training") ylabel(, format(%9.2f)) xlabel(, format(%9.2f)) ///
 	*graph export "$figures/figure3.eps", replace
-
-
 restore
 
 *******
 **(4)**
 *******
-/* figure 4 : the figure used in text is the R script output (see figures programs folder)*/
+/* figure 4 : the figure used in text is the R script output (see figures programs folder) */
 use "$cps/cps_descriptives.dta", clear
 keep if age >16 & age < 55
 
@@ -90,7 +88,7 @@ coefplot, keep(*.ieducation) vertical base rename(1.ieducation="Less Highschool"
 *******
 **(5)**
 *******
-/* figure 5 : the figure used in text is the R script output (see figures programs folder)*/
+/* figure 5 : the figure used in text is the R script output (see figures programs folder) */
 use "$ipums/ipums_cps_clean_25march2024.dta", clear
 
 /*************
