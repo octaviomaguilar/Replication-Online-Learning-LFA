@@ -28,7 +28,7 @@ graph export "$figures/figure1.eps", replace
 /* figure 2 */ 
 use "$cps/cps_naics2_educ.dta", clear
 
-*bar graph of change in online learning pre pandemic. 
+*bar graph of online learning in 2019 across 2-digit NAICS
 graph hbar (mean) naics2_online_educ2019, over(title,sort(naics2_online_educ2019) descending) bar(1, color(blue)) ///
 yline(0.247913, lcolor(red)) ///
 ytitle("Weighted Proportion, %") ///
@@ -36,7 +36,7 @@ ylabel(, format(%9.2f)) ///
 blabel(bar, format(%3.2f)) 
 graph export "$figures/figure2a.eps", replace
 
-*bar graph of change in online training post pandemic. 
+*bar graph of online learning in 2021 across 2-digit NAICS
 graph hbar (mean) naics2_online_educ2021, over(title,sort(naics2_online_educ2021) descending) bar(1, color(blue)) ///
 yline(0.2964892, lcolor(red)) ///
 ytitle("Weighted Proportion, %") ///
